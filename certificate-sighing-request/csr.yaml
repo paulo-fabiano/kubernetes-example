@@ -6,4 +6,4 @@ spec:
   request: <csr-here>
   signerName: kubernetes.io/kube-apiserver-client
   usages:
-  - client authkk
+  - client auth
