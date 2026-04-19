@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend-netpol
+  namespace: backend
+spec:
+  podSelector:
+    matchLabels:
+      run: nginx
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: frontend
+        - namespaceSelector: 
+            matchLabels:
+              kubernetes.io/metadata.name: default1

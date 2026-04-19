@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: my-job
+spec:
+  completions: 10
+  parallelism: 1
+  backoffLimit: 2
+  template:
+    metadata: {}
+    spec:
+      containers:
+      - image: busybox
+        name: my-job
+        resources: {}
+        command: 
+        - sh
+        - -c
+        - cat /etc/passwd
+      restartPolicy: Never
+status: {}

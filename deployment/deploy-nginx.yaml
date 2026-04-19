@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: backend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: nginx
+    tier: frontend
+  name: nginx
+  namespace: backend
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      run: nginx
+  strategy: 
+    # type: Recreate
+    # type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        run: nginx
+        tier: frontend
+    spec:
+      containers:
+        - image: nginx
+          name: nginx
+          env:
+            - name: ENVIROMENT
+              value: "dev"
+          readinessProbe:
+            initialDelaySeconds: 10
+            httpGet:
+              path: /
+              port: 80
+          livenessProbe:
+            initialDelaySeconds: 10
+            httpGet:
+              path: /
+              port: 80
+      dnsPolicy: ClusterFirst
+        # nodeSelector: 
+        # kubernetes.io/hostname: k3d-ckad-agent-0
+      # nodeName: k3d-ckad-agent-0-dontexists
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In 
+                  values:
+                  - k3d-ckad-agent-0
+                  - k3d-ckad-agent-1
+          # preferredDuringSchedulingIgnoredDuringExecution:
+          #   - preference: 
+          #       matchExpressions:
+          #       - key: kubernetes.io/hostname
+          #         operator: In 
+          #         values:
+          #         - k3d-ckad-agent-0
+          #         - k3d-ckad-agent-1
+          #     weight: 10
+
+        

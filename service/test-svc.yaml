@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-svc
+spec:
+  ports:
+  - name: teste
+    port: 3000
+    protocol: TCP
+    targetPort: 80
+  selector:
+    protected: "true"
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-svc-nodeport
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30007
+  selector:
+    protected: "true"
+  type: NodePort

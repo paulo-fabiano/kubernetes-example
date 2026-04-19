@@ -1,0 +1,44 @@
+# Create a PV, PVC and a Deploy with 4 replicas that connect to this PVC
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-question1
+spec:
+  capacity:
+    storage: 5Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReculaimPolicy: Delete
+  storageClassName: show # both name in PV and PVC
+  hostPath:
+    path: /tmp/question1
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-question1
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: show # Both name in PV and PVC
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-question1
+spec:
+  containers:
+    - name: myfrontend
+      image: nginx
+      volumeMounts:
+      - mountPath: "/var/www/html"
+        name: foo
+  volumes:
+    - name: foo
+      persistentVolumeClaim:
+        claimName: pvc-question1

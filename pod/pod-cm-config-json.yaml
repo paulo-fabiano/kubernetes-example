@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+  - name: mypod
+    image: nginx
+    volumeMounts:
+    - name: foo
+      mountPath: "/etc/config/config.json"
+      subPath: config.json
+  volumes:
+  - name: foo
+    configMap:
+      name: config-json
+      items:
+      - key: "config.json" 
+        path: "config.json"

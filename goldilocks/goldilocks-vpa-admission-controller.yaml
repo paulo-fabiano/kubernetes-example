@@ -1,0 +1,135 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+    meta.helm.sh/release-name: goldilocks
+    meta.helm.sh/release-namespace: default
+  creationTimestamp: "2026-04-01T14:27:34Z"
+  generation: 1
+  labels:
+    app.kubernetes.io/component: admission-controller
+    app.kubernetes.io/instance: goldilocks
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: vpa
+    app.kubernetes.io/version: 1.4.1
+    helm.sh/chart: vpa-4.8.1
+  name: goldilocks-vpa-admission-controller
+  namespace: default
+  resourceVersion: "2907"
+  uid: 873ffcb8-7d5e-4e3a-8f23-f83133a9cb2b
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: admission-controller
+      app.kubernetes.io/instance: goldilocks
+      app.kubernetes.io/name: vpa
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app.kubernetes.io/component: admission-controller
+        app.kubernetes.io/instance: goldilocks
+        app.kubernetes.io/name: vpa
+    spec:
+      containers:
+      - args:
+        - --register-webhook=false
+        - --webhook-service=goldilocks-vpa-webhook
+        - --client-ca-file=/etc/tls-certs/ca
+        - --tls-cert-file=/etc/tls-certs/cert
+        - --tls-private-key=/etc/tls-certs/key
+        env:
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        image: registry.k8s.io/autoscaling/vpa-admission-controller:1.4.1
+        imagePullPolicy: Always
+        livenessProbe:
+          failureThreshold: 6
+          httpGet:
+            path: /health-check
+            port: metrics
+            scheme: HTTP
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 3
+        name: vpa
+        ports:
+        - containerPort: 8000
+          name: http
+          protocol: TCP
+        - containerPort: 8944
+          name: metrics
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 120
+          httpGet:
+            path: /health-check
+            port: metrics
+            scheme: HTTP
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 3
+        resources:
+          requests:
+            cpu: 50m
+            memory: 200Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /etc/tls-certs
+          name: tls-certs
+          readOnly: true
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        seccompProfile:
+          type: RuntimeDefault
+      serviceAccount: goldilocks-vpa-admission-controller
+      serviceAccountName: goldilocks-vpa-admission-controller
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: tls-certs
+        secret:
+          defaultMode: 420
+          secretName: goldilocks-vpa-tls-secret
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2026-04-01T14:27:40Z"
+    lastUpdateTime: "2026-04-01T14:27:40Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  - lastTransitionTime: "2026-04-01T14:27:34Z"
+    lastUpdateTime: "2026-04-01T14:27:40Z"
+    message: ReplicaSet "goldilocks-vpa-admission-controller-679bdfd774" has successfully
+      progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  observedGeneration: 1
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1

@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: multi-pod
+  name: multi-pod
+spec:
+  containers:
+  - args:
+    - sh
+    - -c
+    - echo
+    - hello
+    image: busybox
+    name: multi-pod
+  - args:
+    - sh
+    - -c
+    - echo
+    - hello
+    image: busybox
+    name: multi-pod2

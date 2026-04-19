@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: deploy-test-affinity
+  name: deploy-test-affinity
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deploy-test-affinity
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: deploy-test-affinity
+    spec:
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - topologyKey: "kubernetes.io/hostname"
+            labelSelector:
+              matchExpressions: 
+              - key: app
+                operator: In
+                values:
+                - test-affinity
+
+      containers:
+      - image: nginx
+        name: nginx
+        ports:
+        - containerPort: 80
+        resources: {}
+status: {}

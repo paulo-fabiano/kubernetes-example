@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: busybox2
+  name: busybox2
+spec:
+  containers:
+  - command:
+    - env
+    image: busybox
+    name: busybox2
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}

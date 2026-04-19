@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: multi-port-egress
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      run: redis
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              acess: redis 
+      ports:
+        - port: 6379
+          protocol: TCP
+        - port: 6379
+          protocol: UDP 
+        - port: 80 # test
+          protocol: TCP
