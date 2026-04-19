@@ -1,3 +1,3 @@
-# Laboratório
+# Kubernetes
 
-Este repositório está em fase de desenvolvimento para que eu posso estudar e melhorar meus conhecimentos em **Kubernetes**. 
+This repository contains many yaml files about many Kubernetes resources.
