@@ -1,0 +1,8 @@
+kind: TestCrd
+apiVersion: hfs.com/v1
+metadata:
+  name: hindol-crd
+spec:
+  name: "Hindol TestCrd"
+  description: "Hindol TestCrd Description"
+  author: "Hindol Roy"
