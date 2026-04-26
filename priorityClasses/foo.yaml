@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: foo
+  name: foo
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: foo
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: foo
+    spec:
+      priorityClassName: high-priority
+      containers:
+      - image: nginx
+        name: nginx
+        resources: {}

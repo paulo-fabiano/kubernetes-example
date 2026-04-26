@@ -1,0 +1,9 @@
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: high-priority
+value: 1000000000
+description: "Priority class for mission critical pods"
+preemptionPolicy: Never 
+  # - `"Never"` means that pod never preempts other pods with lower priority.
+  # - `"PreemptLowerPriority"` means that pod can preempt other pods with lower priority.
